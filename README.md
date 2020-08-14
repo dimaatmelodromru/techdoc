@@ -2,12 +2,12 @@
 
 ## Public and Private groups on Sphinx
 
-Sphinx.chat clients and relay software support group communications in the form of *Private* (up to 10 members) and *Public* (unlimited) groups (also called *Tribes* on Sphinx). 
-Since every message on Sphinx is end-to end encrypted, for *Private* groups, Admin's Relay takes care of encrypting every message sent by it's members to the group by each recepient's key end sending that message to the recepient directly (over the Lightning network).
-For bigger, *Public* groups, the Group Admin's Relay publishes messages on an intermediary message broker server, **sphinx-tribes**, that other group members Relays connect to to read messages in the group. This allows for a virtually unlimited number of members in a *Public* group.
-To keep the messaging network as decentralized as necessary, anyone can run a **sphinx-tribes** server.
+Sphinx.chat clients and Relay server software support group communications in the form of *Private* (up to 10 members) and *Public* (unlimited) groups (also called *Tribes* on Sphinx). 
+Since every message on Sphinx is end-to-end encrypted, for *Private* groups, the group owner Relay takes care of encrypting every message sent to the group with each recipient's key and sending that message to the recipient directly (over the Lightning Network).
+For bigger, *Public* groups, the Group Admin's Relay publishes messages on an intermediary message broker server, **sphinx-tribes**, that other group members Relays connect to, to read messages sent in the group. This allows for a virtually unlimited number of members in a *Public* group.
+To keep the messaging network as decentralized as necessary, anyone can run their own **sphinx-tribes** server.
 
-![Tribes](https://github.com/stakwork/sphinx-tribes/raw/master/img/tribes.jpg)
+
 
 ### Discovering a tribe
 
@@ -19,7 +19,7 @@ To join a *Public* A user needs to know the following group parameters:
 
 **sphinx-tribes** provides users with a Web interface that publishes the necessary information about the groups it hosts.
 
-![Tribes web UI screenshot](tribes.sphinx.chat.png)
+![Tribes web UI screenshot](img/tribes.sphinx.chat.png)
 *Example of Tribes web UI*
 
 **tribes-server** displays hosted *Public* groups' names, avatars, descriptions, tags; every item expands on click to display additional group info:
@@ -86,21 +86,13 @@ and gets a JSON with the required information:
 "escrow_amount": 0,
 "escrow_millis": 0,
 ```
-are, actually, message staking parameters, *staking amount* (in satoshis) and *staking timeout* (in milliseconds).
+are, actually, message [staking parameters](#message-staking), *staking amount* (in satoshis) and *staking timeout* (in milliseconds).
 
 ---
 
-------------- ------------------------------------
-#### :warning: 
-here `"escrow_amount": 0, "escrow_millis": 0` are, actually, message staking parameters, *staking amount* (in satoshis) and *staking timeout* (in milliseconds).
+**sphinx.chat** client then sends a *Tribe Join request* to the group owner pubkey as a special Sphinx message over Lightning Network.
 
-----------------------------------------------------------------
-
-|   |   |
-|---|---|
-|#### :warning: |here `"escrow_amount": 0, "escrow_millis": 0` are, actually, message staking parameters, *staking amount* (in satoshis) and *staking timeout* (in milliseconds).|
-
-**sphinx.chat** client then sends a *Tribe join request* to the group owner pubkey as a special Sphinx message, over Lightning network.
+![Tribes](img/join_group.svg)
 
 ### Tribe join request
 
@@ -111,27 +103,33 @@ type: 14, chat: { members: [MY_PUBKEY]: {key: MY_ENCRYPTION_KEY, alias: MY_USERN
 ```
 >> TODO: Check with Evan if it's the best possible representation of a Join request
 
-*Keysend* must include amount of not less than *Price to join* of the group.
+*Keysend* must include the amount of satoshis not less than *Price to join* of the group.
 
 If *keysend* succeeds, users can safely assume that the group join has also succeeded, their **sphinx.chat** clients can connect to the specified **sphinx-tribes** server URL using MQTT protocol and read available group messages.
 
 ### Communication within a tribe
 
-**sphinx-tribes** is an MQTT broker that any node can subscribe to. Message topics always have two parts: `{receiverPubKey}/{groupUUID}`. Only the owner of the group is allowed to publish to it: all messages from group members must be submitted to the owner as an LND keysend payment. the group `uuid` is timestamp signed by the owner.
+**sphinx-tribes** is an MQTT broker that any node can subscribe to. Message topics always have two parts: `{receiverPubKey}/{groupUUID}`. Only the owner of the group is allowed to publish to it: all messages from group members must be submitted to the owner as an Lightning *keysend* payment. The group `uuid` is a timestamp, signed by the owner.
 
-![Tribes](https://github.com/stakwork/sphinx-tribes/raw/master/img/sphinx-tribes.png)
+![Communications](img/group_comms.svg)
 
 #### Message staking
 
-To prevent spamming, group admins can enforce *Message staking*, that is requiring group members to include *staking amount*, in addition to (also optional) Group Message Price into each group message. The *staking amount* is to be returned automatically by the group admin Relay server after the expiration of *staking time* after the message publication in the group. If a member was expelled from the group, group admin keeps all the message stakes he had not returned to that moment.
+To prevent spamming, group owners can enforce *Message staking*, that is requiring group members to include *staking amount*, in addition to (also optional) Group Message Price into each group message. The *staking amount* is to be returned automatically by the group owner Relay server after the expiration of *staking time* after the message publication in the group. If a member was expelled from the group, group owner keeps all the message stakes he had not returned to that moment.
+
+---
+### :warning:
+The message staking payback is neither enforced by the network nor checked by the current Sphinx software, so if the group owner runs a modified Relay it might not follow the staking payback rules.
+
+---
 
 #### Message price
 
-To disincentivise spamming activity even more, and to collect some revenue on the group activity, group admin may enforce *message price* that will be collected by him- or herself.
+To disincentivise spamming activity even more, and to collect some revenue on the group activity, group owner may enforce *message price* that will be collected by him- or herself.
 
 #### Paid messages and media
 
-As in private, one-on-one or *Private* group communication, price of a paid message or paid media will be collected by the message's author rather then group admin. *Message price* and *Staking amount* may still apply and will be collected by the group admin.
+As in private, one-on-one, or *Private* group communication, the price of a paid message or paid media will be collected by the message's author rather than the group owner. *Message price* and *Staking amount* may still apply and will be collected by the group owner as usual.
 
 ### Authentication
 
@@ -143,7 +141,7 @@ Authentication is handled by [sphinx-auth](https://github.com/stakwork/sphinx-au
 
 * **docker**
 * **golang**
-* permanent public IP address (unless you are just testing)
+* permanent public IP address (unless you are just testing on your local network)
 * PostgreSQL, installed and [configured](#postgre)
 
 ### PostgreSQL configuration
