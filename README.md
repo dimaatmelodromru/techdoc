@@ -97,6 +97,7 @@ here `"escrow_amount": 0, "escrow_millis": 0` are, actually, message staking par
 
 ----------------------------------------------------------------
 
+|   |   |
 |---|---|
 |#### :warning: |here `"escrow_amount": 0, "escrow_millis": 0` are, actually, message staking parameters, *staking amount* (in satoshis) and *staking timeout* (in milliseconds).|
 
