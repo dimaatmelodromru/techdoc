@@ -81,8 +81,7 @@ and gets a JSON with the required information:
 ```
 
 ---
-NB: 
-here
+### :warning:
 ```
 "escrow_amount": 0,
 "escrow_millis": 0,
