@@ -91,13 +91,8 @@ are, actually, message staking parameters, *staking amount* (in satoshis) and *s
 
 ---
 
---------- ------------------------------------
-:warning: here
-          ```
-          "escrow_amount": 0,
-          "escrow_millis": 0,
-           ```
-          are, actually, message staking parameters, *staking amount* (in satoshis) and *staking timeout* (in milliseconds).
+------------- ------------------------------------
+**:warning:** here `"escrow_amount": 0, "escrow_millis": 0` are, actually, message staking parameters, *staking amount* (in satoshis) and *staking timeout* (in milliseconds).
 
 ----------------------------------------------------------------
 
