@@ -91,6 +91,13 @@ are, actually, message staking parameters, *staking amount* (in satoshis) and *s
 
 ---
 
+---------- ------------------------------------
+:warning:\ Table multiline text bla bla bla bla
+                        bla bla bla bla bla bla bla ... the
+                        blank line below is important 
+
+----------------------------------------------------------------
+
 **sphinx.chat** client then sends a *Tribe join request* to the group owner pubkey as a special Sphinx message, over Lightning network.
 
 ### Tribe join request
