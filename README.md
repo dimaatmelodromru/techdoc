@@ -97,6 +97,9 @@ here `"escrow_amount": 0, "escrow_millis": 0` are, actually, message staking par
 
 ----------------------------------------------------------------
 
+|---|---|
+|#### :warning: |here `"escrow_amount": 0, "escrow_millis": 0` are, actually, message staking parameters, *staking amount* (in satoshis) and *staking timeout* (in milliseconds).|
+
 **sphinx.chat** client then sends a *Tribe join request* to the group owner pubkey as a special Sphinx message, over Lightning network.
 
 ### Tribe join request
