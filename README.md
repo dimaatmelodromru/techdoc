@@ -91,10 +91,13 @@ are, actually, message staking parameters, *staking amount* (in satoshis) and *s
 
 ---
 
----------- ------------------------------------
-:warning:\ Table multiline text bla bla bla bla
-                        bla bla bla bla bla bla bla ... the
-                        blank line below is important 
+--------- ------------------------------------
+:warning: here
+          ```
+          "escrow_amount": 0,
+          "escrow_millis": 0,
+           ```
+          are, actually, message staking parameters, *staking amount* (in satoshis) and *staking timeout* (in milliseconds).
 
 ----------------------------------------------------------------
 
